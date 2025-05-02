@@ -1,7 +1,7 @@
 package database
 
 import (
-	"todolist/models"
+	"quizapp/models"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -15,6 +15,6 @@ func ConnectDB() {
 		panic("Database Connection Error")
 	}
 	DB = db
-	DB.AutoMigrate(&models.Task{})
 	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.Quiz{})
 }

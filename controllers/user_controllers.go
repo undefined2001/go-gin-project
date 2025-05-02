@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"net/http"
-	"todolist/database"
-	"todolist/models"
+	"quizapp/database"
+	"quizapp/models"
 
 	"github.com/gin-gonic/gin"
 	csrf "github.com/utrack/gin-csrf"
@@ -15,7 +15,12 @@ func GetUser(ctx *gin.Context) {
 	})
 }
 
-func UserLogin(c *gin.Context) {
+func GetUserLogin(c *gin.Context) {
+	c.HTML(http.StatusOK, "login.html", gin.H{"Title": "Login", "csrf": csrf.GetToken(c)})
+
+}
+
+func PostUserLogin(c *gin.Context) {
 	var request struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`

@@ -2,23 +2,27 @@ package main
 
 import (
 	"net/http"
-	"todolist/database"
-	"todolist/routes"
+	"quizapp/database"
+	"quizapp/routes"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	csrf "github.com/utrack/gin-csrf"
+	"quizapp/middleware"
 )
 
 func main() {
 
 	port := ":8080"
 	r := gin.Default()
+	r.LoadHTMLGlob("templates/**/*")
 
 	store := cookie.NewStore([]byte("super-secret-key"))
 
 	r.Use(sessions.Sessions("Mysessions", store))
+
+	r.Use(middleware.AuthMiddleware()) // * Auth Middleware
 
 	r.Use(csrf.Middleware(
 		csrf.Options{
@@ -32,10 +36,10 @@ func main() {
 	database.ConnectDB() //* Connecting to the Database
 
 	r.Static("/static", "./static")
-	r.LoadHTMLGlob("./templates/*") //* Setting Folder for Templates
 
-	routes.TaskRoutes(r) // Registering Task Routes
-	routes.UserRoutes(r) // Registering User Routes
+	routes.UserRoutes(r)  // Registering User Routes
+	routes.QuizRoutes(r)  // Registering Quiz Routes
+	routes.AdminRoutes(r) //Registering Admin Routes
 
 	r.Run(port)
 
