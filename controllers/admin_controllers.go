@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"quizapp/database"
 	"quizapp/models"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	csrf "github.com/utrack/gin-csrf"
@@ -26,6 +25,26 @@ func AdminUserList(c *gin.Context) {
 	})
 }
 
+func GetViewQuiz(c *gin.Context) {
+	var quizzes []models.Quiz
+
+	result := database.DB.Find(&quizzes)
+	if result.Error != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	for _, quiz := range quizzes {
+		println("quiz", quiz.Title)
+	}
+
+	c.HTML(http.StatusOK, "view_quiz_list.html", gin.H{
+		"Title":   "Admin | Quiz List",
+		"Quizzes": quizzes,
+	})
+}
+
+
 func GetAddQuize(c *gin.Context) {
 	c.HTML(http.StatusOK, "add_quiz.html", gin.H{
 		"Title": "Add Quiz",
@@ -36,25 +55,13 @@ func GetAddQuize(c *gin.Context) {
 
 func PostAddQuiz(c *gin.Context) {
 	// Get the form values
-	quizQuestion := c.PostForm("question")
-	quizOptionOne := c.PostForm("option1")
-	quizOptionTwo := c.PostForm("option2")
-	quizOptionThree := c.PostForm("option3")
-	quizOptionFour := c.PostForm("option4")
-	quizAnswer, _ := strconv.Atoi(c.PostForm("answer"))
+	quizTitle := c.PostForm("title")
 
 	quiz := &models.Quiz{
-		Question:    quizQuestion,
-		OptionOne:   quizOptionOne,
-		OptionTwo:   quizOptionTwo,
-		OptionThree: quizOptionThree,
-		OptionFour:  quizOptionFour,
-		Answer:      quizAnswer,
+		Title: quizTitle,
 	}
-
-	if err := quiz.CreateQuiz(database.DB); err != nil {
-		println("Quiz Creation Failed.")
-	}
+	println("quiz", quiz.Title)
+	database.DB.Create(quiz)
 
 	c.Redirect(http.StatusSeeOther, "/admin/add_quiz")
 }

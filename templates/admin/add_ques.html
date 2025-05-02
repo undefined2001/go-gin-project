@@ -1,0 +1,31 @@
+{{template "header"}}
+{{ template "sidebar" . }}
+<div class="main-content container mt-4">
+    <h1 class="mb-4">Welcome to the Admin Panel</h1>
+    <div class="form">
+        <form action="/admin/add_quiz" method="post" class="form">
+            <input type="hidden" name="_csrf" value="{{ .csrf }}">
+            <div class="mb-3">
+                <textarea class="form-control" id="question" name="question" placeholder="Enter the question"
+                    required></textarea>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="option1" name="option1" placeholder="Option 1" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="option2" name="option2" placeholder="Option 2" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="option3" name="option3" placeholder="Option 3" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="option4" name="option4" placeholder="Option 4" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="answer" name="answer" placeholder="Answer" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-sm">Add</button>
+        </form>
+    </div>
+</div>
+{{ template "footer" . }}

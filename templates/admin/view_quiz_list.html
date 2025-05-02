@@ -1,0 +1,35 @@
+{{template "header"}}
+{{ template "sidebar" . }}
+<div class="main-content container mt-4">
+    <div class="quiz container">
+        <h2>All Quizzes</h2>
+        <a href="/admin/add_quiz" class="btn btn-success btn-md my-3">Create Quiz</a>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Quiz Title</th>
+                    <th>Date Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Quizzes}}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>{{.Title}}</td>
+                    <td>{{.CreatedAt.Format "2006-01-02 15:04:05"}}</td>
+                    <td>
+                        <a href="/admin/quiz/view/{{.ID}}" class="btn btn-primary btn-sm">View</a>
+                        <a href="/admin/quiz/edit/{{.ID}}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="/admin/quiz/delete/{{.ID}}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</div>
+{{ template "footer" . }}
