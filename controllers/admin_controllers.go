@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"net/http"
-	"quizapp/database"
-	"quizapp/models"
-
 	"github.com/gin-gonic/gin"
 	csrf "github.com/utrack/gin-csrf"
+	"net/http"
+	"quizapp/database"
+	"quizapp/middleware"
+	"quizapp/models"
 )
 
 func AdminIndex(c *gin.Context) {
@@ -44,7 +44,6 @@ func GetViewQuiz(c *gin.Context) {
 	})
 }
 
-
 func GetAddQuize(c *gin.Context) {
 	c.HTML(http.StatusOK, "add_quiz.html", gin.H{
 		"Title": "Add Quiz",
@@ -64,4 +63,32 @@ func PostAddQuiz(c *gin.Context) {
 	database.DB.Create(quiz)
 
 	c.Redirect(http.StatusSeeOther, "/admin/add_quiz")
+}
+
+func PostUploadQuizExcelSheet(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(400, gin.H{"error": "File upload failed"})
+		return
+	}
+
+	filePath := "./uploads/" + file.Filename
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
+		c.JSON(500, gin.H{"error": "Failed to save file"})
+		return
+	}
+
+	if err := middleware.ParseAndCreateQuiz(database.DB, filePath); err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Quiz created successfully"})
+}
+
+func GetUploadQuizExcelSheet(c *gin.Context) {
+	c.HTML(http.StatusOK, "upload_quiz.html", gin.H{
+		"Title": "Upload Quiz Excel",
+		"csrf":  csrf.GetToken(c),
+	})
 }

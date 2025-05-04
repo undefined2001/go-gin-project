@@ -14,4 +14,6 @@ func AdminRoutes(router *gin.Engine) {
 	admin_routes.GET("/view_quiz", controllers.GetViewQuiz)
 	admin_routes.GET("/add_quiz", controllers.GetAddQuize)
 	admin_routes.POST("/add_quiz", controllers.PostAddQuiz)
+	admin_routes.POST("/upload", controllers.PostUploadQuizExcelSheet)
+	admin_routes.GET("/upload", controllers.GetUploadQuizExcelSheet)
 }

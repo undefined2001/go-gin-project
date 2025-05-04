@@ -1,0 +1,43 @@
+{{template "header"}}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">Participate in Quiz: {{.Quiz.Title}}</h1>
+        <p class="text-muted">Select an answer for each question. You will get immediate feedback.</p>
+    </div>
+
+    <div id="quiz-container" data-quiz-id="{{.Quiz.ID}}">
+        {{range $index, $question := .Questions}}
+        <div class="question-block mb-4 p-4 border-start border-4 border-primary rounded bg-light"
+            data-question-index="{{$index}}" data-correct-answer="{{$question.Answer}}">
+            <h5 class="mb-3 text-dark">{{$question.Question}}</h5>
+
+            <div class="form-check mb-2">
+                <input type="radio" class="form-check-input" name="question-{{$index}}" value="1"
+                    onchange="checkAnswer(this)" id="q{{$index}}a1">
+                <label class="form-check-label" for="q{{$index}}a1">{{$question.OptionOne}}</label>
+            </div>
+            <div class="form-check mb-2">
+                <input type="radio" class="form-check-input" name="question-{{$index}}" value="2"
+                    onchange="checkAnswer(this)" id="q{{$index}}a2">
+                <label class="form-check-label" for="q{{$index}}a2">{{$question.OptionTwo}}</label>
+            </div>
+            <div class="form-check mb-2">
+                <input type="radio" class="form-check-input" name="question-{{$index}}" value="3"
+                    onchange="checkAnswer(this)" id="q{{$index}}a3">
+                <label class="form-check-label" for="q{{$index}}a3">{{$question.OptionThree}}</label>
+            </div>
+            <div class="form-check mb-2">
+                <input type="radio" class="form-check-input" name="question-{{$index}}" value="4"
+                    onchange="checkAnswer(this)" id="q{{$index}}a4">
+                <label class="form-check-label" for="q{{$index}}a4">{{$question.OptionFour}}</label>
+            </div>
+        </div>
+        {{end}}
+
+        <div class="text-center mt-4">
+            <button class="btn btn-success px-5 py-2 fs-5" onclick="showFinalScore()">Show Score</button>
+        </div>
+    </div>
+</div>
+
+{{template "footer"}}

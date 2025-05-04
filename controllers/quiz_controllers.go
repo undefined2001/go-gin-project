@@ -1,24 +1,47 @@
 package controllers
 
 import (
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"quizapp/database"
 	"quizapp/models"
-	"github.com/gin-gonic/gin"
 )
 
 func QuizIndex(c *gin.Context) {
-	quizID := c.Param("id")
-	var quiz models.Quiz
 
-	// Fetch quiz with associated questions
-	if err := database.DB.Preload("Questions").First(&quiz, quizID).Error; err != nil {
-		c.HTML(http.StatusNotFound, "404.html", nil)
+	var quizzes []models.Quiz
+	result := database.DB.Find(&quizzes)
+	if result.Error != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
 
 	c.HTML(http.StatusOK, "quiz.html", gin.H{
-		"Title": "Quiz | " + quiz.Title,
-		"Quiz":  quiz,
+		"Title":   "Quizzy",
+		"Quizzes": quizzes,
+	})
+}
+
+func GetParticipateQuiz(c *gin.Context) {
+	quizID := c.Param("id")
+	var questions []models.Question
+	result := database.DB.Where("quiz_id = ?", quizID).Find(&questions)
+
+	if result.Error != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	var quiz models.Quiz
+	result = database.DB.First(&quiz, quizID)
+	if result.Error != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	c.HTML(http.StatusOK, "participate_quiz.html", gin.H{
+		"Title":     "Participate Quiz",
+		"Quiz":      quiz,
+		"Questions": questions,
 	})
 }

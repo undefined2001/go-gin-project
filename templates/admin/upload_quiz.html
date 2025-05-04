@@ -1,0 +1,14 @@
+{{template "header" .}}
+{{ template "sidebar" . }}
+<div class="container mt-5">
+    <h2 class="text-center">Upload Excel File</h2>
+    <form action="/admin/upload" method="POST" enctype="multipart/form-data" class="mt-4">
+        <div class="mb-3">
+            <input type="hidden" name="_csrf" value="{{.csrf}}">
+            <label for="excelFile" class="form-label">Choose Excel File</label>
+            <input type="file" class="form-control" id="excelFile" name="file" accept=".xls,.xlsx" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+</div>
+{{template "footer.html"}}
